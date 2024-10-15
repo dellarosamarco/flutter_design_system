@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/constants.dart';
+import 'package:flutter_design_system/context.dart';
 
 class CustomCard extends StatefulWidget {
   final String title;
@@ -63,16 +63,16 @@ class _CustomCardState extends State<CustomCard> {
       child: Container(
         width: widget.width,
         padding: const EdgeInsets.all(10),
-        decoration: const BoxDecoration(
-          color: primaryColor,
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+        decoration: BoxDecoration(
+          color: Context.primaryColor,
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                if(widget.hasIcon == true) Icon(Icons.folder, color: semiTransparentWhite, size: widget.iconSize,),
+                if(widget.hasIcon == true) Icon(Icons.folder, color: Context.semiTransparentWhite, size: widget.iconSize,),
                 if(widget.isCheckable == true) SizedBox(
                   width: 25,
                   height: 10,
@@ -85,8 +85,8 @@ class _CustomCardState extends State<CustomCard> {
                         }
                       });
                     }, 
-                    activeColor: successColor,
-                    side: const BorderSide(color: semiTransparentWhite, width: 2),
+                    activeColor: Context.successColor,
+                    side: BorderSide(color: Context.semiTransparentWhite, width: 2),
                   ),
                 ),
                 if(widget.hasIcon == true || widget.isCheckable == true) const SizedBox(width: 5,),

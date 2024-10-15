@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/constants.dart';
+import 'package:flutter_design_system/context.dart';
 
 class TextEditorResponse {
   final String title;
@@ -12,7 +12,7 @@ class TextEditor extends StatefulWidget {
   final String? title;
   final String? content;
 
-  TextEditor({super.key, this.title, this.content});
+  const TextEditor({super.key, this.title, this.content});
 
   @override
   State<TextEditor> createState() => _TextEditorState();
@@ -34,9 +34,9 @@ class _TextEditorState extends State<TextEditor> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: Context.backgroundColor,
       appBar: AppBar(
-        backgroundColor: backgroundColor,
+        backgroundColor: Context.backgroundColor,
         iconTheme: const IconThemeData(color: Colors.white),
         leading: BackButton(
           onPressed: () => Navigator.pop<TextEditorResponse>(
@@ -50,21 +50,21 @@ class _TextEditorState extends State<TextEditor> {
           children: [
             TextField(
               controller: titleController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: 'Title',
-                hintStyle: TextStyle(color: semiTransparentWhite, fontSize: 25, fontWeight: FontWeight.normal),
+                hintStyle: TextStyle(color: Context.semiTransparentWhite, fontSize: 25, fontWeight: FontWeight.normal),
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.only(left: 16),
+                contentPadding: const EdgeInsets.only(left: 16),
               ),
               style: const TextStyle(color: Colors.white),
             ),
             TextField(
               controller: contentController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: 'Note',
-                hintStyle: TextStyle(color: semiTransparentWhite, fontSize: 17.5, fontWeight: FontWeight.normal),
+                hintStyle: TextStyle(color: Context.semiTransparentWhite, fontSize: 17.5, fontWeight: FontWeight.normal),
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.only(left: 16),
+                contentPadding: const EdgeInsets.only(left: 16),
               ),
               maxLines: 30,
               style: const TextStyle(color: Colors.white),

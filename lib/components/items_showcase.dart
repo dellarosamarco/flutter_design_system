@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_design_system/components/items_grid.dart';
-import 'package:flutter_design_system/constants.dart';
+import 'package:flutter_design_system/context.dart';
 
 class ItemsShowcase extends StatefulWidget {
   final String title;
@@ -47,14 +47,14 @@ class _ItemsShowcaseState extends State<ItemsShowcase> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(widget.title, style: defaultTextStyle,),
+            Text(widget.title, style: Context.defaultTextStyle,),
             ElevatedButton(
               style: ButtonStyle(
                 backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),
                 shadowColor: WidgetStateProperty.all<Color>(Colors.transparent),
               ),
               onPressed: () {}, 
-              child: const Text('See all', style: TextStyle(color: actionColor),)
+              child: Text('See all', style: TextStyle(color: Context.actionColor),)
             )
           ],
         ),
@@ -62,9 +62,9 @@ class _ItemsShowcaseState extends State<ItemsShowcase> {
         if(widget.items.isNotEmpty)
           renderItems()
         else
-          const Padding(
-            padding: EdgeInsets.only(bottom: 50),
-            child: Text('Empty', style: TextStyle(color: semiTransparentWhite, fontSize: 20)),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 50),
+            child: Text('Empty', style: TextStyle(color: Context.semiTransparentWhite, fontSize: 20)),
           ),
       ],
     );
