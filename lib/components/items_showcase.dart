@@ -3,11 +3,12 @@ import 'package:flutter_design_system/components/items_grid.dart';
 import 'package:flutter_design_system/context.dart';
 
 class ItemsShowcase extends StatefulWidget {
+  final Color? backgroundColor;
   final String title;
   final List<Widget> items;
   final bool? isRow;
   final bool? isGrid;
-  const ItemsShowcase({super.key, required this.title, required this.items, this.isRow=true, this.isGrid=false});
+  const ItemsShowcase({super.key, required this.title, required this.items, this.isRow=true, this.isGrid=false, this.backgroundColor});
 
   @override
   State<ItemsShowcase> createState() => _ItemsShowcaseState();
@@ -41,32 +42,35 @@ class _ItemsShowcaseState extends State<ItemsShowcase> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(widget.title, style: Context.defaultTextStyle,),
-            ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),
-                shadowColor: WidgetStateProperty.all<Color>(Colors.transparent),
-              ),
-              onPressed: () {}, 
-              child: Text('See all', style: TextStyle(color: Context.actionColor),)
-            )
-          ],
-        ),
-        const SizedBox(height: 10),
-        if(widget.items.isNotEmpty)
-          renderItems()
-        else
-          Padding(
-            padding: const EdgeInsets.only(bottom: 50),
-            child: Text('Empty', style: TextStyle(color: Context.semiTransparentWhite, fontSize: 20)),
+    return Container(
+      color: widget.backgroundColor ?? Context.primaryColor,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(widget.title, style: Context.defaultTextStyle,),
+              ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),
+                  shadowColor: WidgetStateProperty.all<Color>(Colors.transparent),
+                ),
+                onPressed: () {}, 
+                child: Text('See all', style: TextStyle(color: Context.actionColor),)
+              )
+            ],
           ),
-      ],
+          const SizedBox(height: 10),
+          if(widget.items.isNotEmpty)
+            renderItems()
+          else
+            Padding(
+              padding: const EdgeInsets.only(bottom: 50),
+              child: Text('Empty', style: TextStyle(color: Context.semiTransparentWhite, fontSize: 20)),
+            ),
+        ],
+      ),
     );
   }
 }

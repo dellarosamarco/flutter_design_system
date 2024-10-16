@@ -60,7 +60,7 @@ class _CustomCardState extends State<CustomCard> {
         width: widget.width,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: widget.backgroundColor,
+          color: widget.backgroundColor ?? Context.primaryColor,
           borderRadius: const BorderRadius.all(Radius.circular(10)),
         ),
         child: Column(

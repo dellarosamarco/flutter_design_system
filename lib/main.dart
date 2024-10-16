@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_design_system/tests/items_showcase.test.dart';
 import 'tests/custom_card.test.dart';
 
 void main() {
@@ -10,13 +11,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Context.mergeContext(const PartialContext(
-    //   primaryColor: Colors.black
-    // ));
-
     return const MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: CustomCardTest()
+        // body: CustomCardTest()
+        body: ItemsShowcaseTest()
       )
     );
   }

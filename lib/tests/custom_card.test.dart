@@ -11,7 +11,7 @@ class CustomCardTest extends StatelessWidget {
         children: [
           CustomCard(title: 'test', backgroundColor: Colors.black,),
           SizedBox(height: 20,),
-          CustomCard(title: 'test', description: 'test description', backgroundColor: Colors.black,),
+          CustomCard(title: 'test', description: 'test description'),
           SizedBox(height: 20,),
           CustomCard(title: 'test', description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s,', backgroundColor: Colors.black,),
           SizedBox(height: 20,),
