@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_design_system/flutter_design_system.dart';
+import 'components/calendar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,11 +15,11 @@ class MyApp extends StatelessWidget {
     //   primaryColor: Colors.black
     // ));
 
-    return const MaterialApp(
+    return MaterialApp(
       home: Scaffold(
         body: Column(
           children: [
-            CustomCard(title: 'test'),
+            
           ],
         )
       )
