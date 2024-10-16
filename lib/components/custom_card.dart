@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_design_system/context.dart';
 
 class CustomCard extends StatefulWidget {
+  final Color? backgroundColor;
   final String title;
   final TextStyle? titleStyle;
   final String description;
   final TextStyle? descriptionStyle;
   final double iconSize;
-  final bool? hasIcon;
+  final IconData? icon;
   final double? width;
-  final bool? isCheckable;
   final Function(bool value)? onCheck;
   final Function? onClick;
   final bool? isChecked;
@@ -17,8 +17,8 @@ class CustomCard extends StatefulWidget {
   const CustomCard({
     super.key, 
     required this.title,
-    this.hasIcon=false, 
-    this.isCheckable=false, 
+    this.backgroundColor,
+    this.icon,
     this.iconSize=20, 
     this.width, 
     this.onCheck,
@@ -44,12 +44,8 @@ class _CustomCardState extends State<CustomCard> {
 
   Widget renderDescription() {
     int maxDescriptionLength = 180;
-
-    if(widget.descriptionStyle != null) {
-      return Text(widget.description.substring(0, maxDescriptionLength) + (widget.description.length > maxDescriptionLength ? '...' : ''), style: widget.descriptionStyle,);
-    }
-
-    return Text(widget.description.substring(0, maxDescriptionLength) + (widget.description.length > maxDescriptionLength ? '...' : ''), style: const TextStyle(color: Colors.white, ),);
+    int endRange = widget.description.length > maxDescriptionLength ? maxDescriptionLength : widget.description.length;
+    return Text(widget.description.substring(0, endRange) + (widget.description.length > maxDescriptionLength ? '...' : ''), style: const TextStyle(color: Colors.white, ),);
   }
 
   @override
@@ -64,7 +60,7 @@ class _CustomCardState extends State<CustomCard> {
         width: widget.width,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Context.primaryColor,
+          color: widget.backgroundColor,
           borderRadius: const BorderRadius.all(Radius.circular(10)),
         ),
         child: Column(
@@ -72,24 +68,8 @@ class _CustomCardState extends State<CustomCard> {
           children: [
             Row(
               children: [
-                if(widget.hasIcon == true) Icon(Icons.folder, color: Context.semiTransparentWhite, size: widget.iconSize,),
-                if(widget.isCheckable == true) SizedBox(
-                  width: 25,
-                  height: 10,
-                  child: Checkbox(
-                    value: widget.isChecked, 
-                    onChanged: (value) {
-                      setState(() {
-                        if(widget.onCheck != null) {
-                          widget.onCheck!(value ?? false);
-                        }
-                      });
-                    }, 
-                    activeColor: Context.successColor,
-                    side: BorderSide(color: Context.semiTransparentWhite, width: 2),
-                  ),
-                ),
-                if(widget.hasIcon == true || widget.isCheckable == true) const SizedBox(width: 5,),
+                if(widget.icon != null) Icon(widget.icon, color: Context.semiTransparentWhite, size: widget.iconSize,),
+                if(widget.icon != null) const SizedBox(width: 5,),
                 renderTitle(),
               ],
             ),

@@ -7,4 +7,5 @@ export './components/floating_popup_menu.dart';
 export './components/items_grid.dart';
 export './components/items_showcase.dart';
 export './components/text_editor.dart';
+export './components/calendar.dart';
 export './context.dart';
