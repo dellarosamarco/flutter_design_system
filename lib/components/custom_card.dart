@@ -43,9 +43,7 @@ class _CustomCardState extends State<CustomCard> {
   }
 
   Widget renderDescription() {
-    int maxDescriptionLength = 180;
-    int endRange = widget.description.length > maxDescriptionLength ? maxDescriptionLength : widget.description.length;
-    return Text(widget.description.substring(0, endRange) + (widget.description.length > maxDescriptionLength ? '...' : ''), style: const TextStyle(color: Colors.white, ),);
+    return Text(widget.description, style: const TextStyle(color: Colors.white, ),);
   }
 
   @override
