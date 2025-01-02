@@ -1,21 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/tests/items_showcase.test.dart';
-import 'tests/custom_card.test.dart';
+import 'package:flutter_design_system/components/calendar.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  DateTime futureDate = DateTime.now().add(const Duration(days: 5));
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        // body: CustomCardTest()
-        body: ItemsShowcaseTest()
+        body: Calendar(
+          initialDate: DateTime.now(),
+          lastDate: DateTime.now(),
+          onDateChanged: (_) {},
+          firstDate: DateTime.now(),
+          filledDays: [
+            DateTime.now(),
+            futureDate
+          ],
+        )
       )
     );
   }

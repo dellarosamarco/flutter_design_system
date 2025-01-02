@@ -4,7 +4,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 
 const Duration _monthScrollDuration = Duration(milliseconds: 200);
 
@@ -52,6 +51,7 @@ class Calendar extends StatefulWidget {
     this.onDisplayedMonthChanged,
     this.initialCalendarMode = DatePickerMode.day,
     this.selectableDayPredicate,
+    this.filledDays
   }) : initialDate = initialDate == null ? null : DateUtils.dateOnly(initialDate),
        firstDate = DateUtils.dateOnly(firstDate),
        lastDate = DateUtils.dateOnly(lastDate),
@@ -96,6 +96,8 @@ class Calendar extends StatefulWidget {
 
   /// Called when the user navigates to a new month/year in the picker.
   final ValueChanged<DateTime>? onDisplayedMonthChanged;
+
+  final List<DateTime>? filledDays;
 
   /// The initial display of the calendar picker.
   ///
@@ -253,6 +255,7 @@ class _CalendarState extends State<Calendar> {
           onChanged: _handleDayChanged,
           onDisplayedMonthChanged: _handleMonthChanged,
           selectableDayPredicate: widget.selectableDayPredicate,
+          filledDays: widget.filledDays,
         );
       case DatePickerMode.year:
         return Padding(
@@ -304,10 +307,6 @@ class _CalendarState extends State<Calendar> {
   }
 }
 
-/// A button that used to toggle the [DatePickerMode] for a date picker.
-///
-/// This appears above the calendar grid and allows the user to toggle the
-/// [DatePickerMode] to display either the calendar view or the year list.
 class _DatePickerModeToggleButton extends StatefulWidget {
   const _DatePickerModeToggleButton({
     required this.mode,
@@ -432,6 +431,7 @@ class _MonthPicker extends StatefulWidget {
     required this.onChanged,
     required this.onDisplayedMonthChanged,
     this.selectableDayPredicate,
+    this.filledDays
   }) : assert(!firstDate.isAfter(lastDate)),
        assert(selectedDate == null || !selectedDate.isBefore(firstDate)),
        assert(selectedDate == null || !selectedDate.isAfter(lastDate));
@@ -443,6 +443,8 @@ class _MonthPicker extends StatefulWidget {
   /// provide that widget the new [initialMonth]. This will reset the widget's
   /// interactive state.
   final DateTime initialMonth;
+
+  final List<DateTime>? filledDays;
 
   /// The current date.
   ///
@@ -715,6 +717,7 @@ class _MonthPickerState extends State<_MonthPicker> {
       lastDate: widget.lastDate,
       displayedMonth: month,
       selectableDayPredicate: widget.selectableDayPredicate,
+      filledDays: widget.filledDays
     );
   }
 
@@ -774,10 +777,6 @@ class _MonthPickerState extends State<_MonthPicker> {
   }
 }
 
-/// InheritedWidget indicating what the current focused date is for its children.
-///
-/// This is used by the [_MonthPicker] to let its children [_DayPicker]s know
-/// what the currently focused date (if any) should be.
 class _FocusedDate extends InheritedWidget {
   const _FocusedDate({
     required super.child,
@@ -797,10 +796,6 @@ class _FocusedDate extends InheritedWidget {
   }
 }
 
-/// Displays the days of a given month and allows choosing a day.
-///
-/// The days are arranged in a rectangular grid with one column for each day of
-/// the week.
 class _DayPicker extends StatefulWidget {
   /// Creates a day picker.
   _DayPicker({
@@ -812,6 +807,7 @@ class _DayPicker extends StatefulWidget {
     required this.selectedDate,
     required this.onChanged,
     this.selectableDayPredicate,
+    this.filledDays
   }) : assert(!firstDate.isAfter(lastDate)),
        assert(selectedDate == null || !selectedDate.isBefore(firstDate)),
        assert(selectedDate == null || !selectedDate.isAfter(lastDate));
@@ -820,6 +816,8 @@ class _DayPicker extends StatefulWidget {
   ///
   /// This date is highlighted in the picker.
   final DateTime? selectedDate;
+
+  final List<DateTime>? filledDays;
 
   /// The current date at the time the picker is displayed.
   final DateTime currentDate;
@@ -931,6 +929,7 @@ class _DayPickerState extends State<_DayPicker> {
             isToday: isToday,
             onChanged: widget.onChanged,
             focusNode: _dayFocusNodes[day - 1],
+            filledDays: widget.filledDays
           ),
         );
       }
@@ -966,6 +965,7 @@ class _Day extends StatefulWidget {
     required this.isToday,
     required this.onChanged,
     required this.focusNode,
+    this.filledDays
   });
 
   final DateTime day;
@@ -974,6 +974,7 @@ class _Day extends StatefulWidget {
   final bool isToday;
   final ValueChanged<DateTime> onChanged;
   final FocusNode? focusNode;
+  final List<DateTime>? filledDays;
 
   @override
   State<_Day> createState() => _DayState();
@@ -1028,10 +1029,34 @@ class _DayState extends State<_Day> {
           shape: dayShape,
         );
 
+    bool isSameDayInArray(DateTime targetDate, List<DateTime> dateArray) {
+      for (DateTime date in dateArray) {
+        if (targetDate.year == date.year &&
+            targetDate.month == date.month &&
+            targetDate.day == date.day) {
+          return true;
+        }
+      }
+      return false;
+    }
+
     Widget dayWidget = DecoratedBox(
       decoration: decoration,
       child: Center(
-        child: Text(localizations.formatDecimal(widget.day.day), style: dayStyle?.apply(color: dayForegroundColor)),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(localizations.formatDecimal(widget.day.day), style: dayStyle?.apply(color: dayForegroundColor)),
+            if(isSameDayInArray((widget.key as ValueKey<DateTime>).value, (widget.filledDays ?? []))) Container(
+              width: 3,
+              height: 3,
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 8, 234, 241),
+                shape: BoxShape.circle,
+              ),
+            )
+          ],
+        ),
       ),
     );
 
@@ -1104,19 +1129,6 @@ class _DayPickerGridDelegate extends SliverGridDelegate {
   bool shouldRelayout(_DayPickerGridDelegate oldDelegate) => false;
 }
 
-/// A scrollable grid of years to allow picking a year.
-///
-/// The year picker widget is rarely used directly. Instead, consider using
-/// [CalendarDatePicker], or [showDatePicker] which create full date pickers.
-///
-/// See also:
-///
-///  * [CalendarDatePicker], which provides a Material Design date picker
-///    interface.
-///
-///  * [showDatePicker], which shows a dialog containing a Material Design
-///    date picker.
-///
 class YearPicker extends StatefulWidget {
   /// Creates a year picker.
   ///
@@ -1219,7 +1231,6 @@ class _YearPickerState extends State<YearPicker> {
 
     final double textScaleFactor = MediaQuery.textScalerOf(context).clamp(maxScaleFactor: 3.0).scale(_fontSizeToScale) / _fontSizeToScale;
 
-    // Backfill the _YearPicker with disabled years if necessary.
     final int offset = _itemCount < minYears ? (minYears - _itemCount) ~/ 2 : 0;
     final int year = widget.firstDate.year + index - offset;
     final bool isSelected = year == widget.selectedDate?.year;
